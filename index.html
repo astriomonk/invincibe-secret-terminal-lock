@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Secret Terminal Lock</title>
+  <title>Invincible Terminal Lock</title>
   <style>
     body {
       margin: 0;
@@ -19,8 +19,8 @@
     #terminal {
       border: 2px solid #00ff00;
       padding: 20px;
-      width: 80%;
-      max-width: 500px;
+      width: 90%;
+      max-width: 600px;
       text-align: center;
       background-color: #111;
     }
@@ -40,15 +40,24 @@
       color: black;
       border: none;
       padding: 10px 20px;
-      margin-top: 10px;
+      margin: 10px 5px 0;
       cursor: pointer;
       font-weight: bold;
     }
 
-    #secret {
+    #secret, #unlockedContainer {
       display: none;
       margin-top: 20px;
       color: #0f0;
+    }
+
+    #unlockedList {
+      text-align: left;
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      border-top: 1px dashed #0f0;
+      padding-top: 10px;
     }
   </style>
 </head>
@@ -59,20 +68,77 @@
     <input type="password" id="code" placeholder="Enter code..." />
     <br>
     <button onclick="checkCode()">Unlock</button>
+    <button onclick="toggleUnlocked()">View Unlocked Quotes</button>
+
     <div id="secret">
       <h3>ACCESS GRANTED</h3>
-      <p>The secret message is:<br><strong>“The cake is a lie.”</strong></p>
+      <p id="secretMsg"></p>
+    </div>
+
+    <div id="unlockedContainer">
+      <h3>Unlocked Quotes:</h3>
+      <div id="unlockedList"></div>
     </div>
   </div>
 
   <script>
+    const messages = [
+      "Think, Mark! THINK!",
+      "I don’t care how fast you are. I don’t care how strong you are. I can see the future — you don’t live to see tomorrow.",
+      "You want to die for this planet? Fine. Die for it.",
+      "Look at what they need to mimic a fraction of our power.",
+      "Your mother’s more like a pet to me.",
+      "This planet was always temporary.",
+      "Human lives are meaningless in the grand scheme.",
+      "In time, you’ll thank me.",
+      "You were never really Invincible.",
+      "You’re weak, Mark. You always have been.",
+      "Earth is not your home anymore.",
+      "You’ll outlive everyone you love. Get used to it.",
+      "What’s 17 more years? I can always start over.",
+      "A Viltrumite doesn’t retreat. We dominate.",
+      "You have my blood. You’ll live long enough to understand.",
+      "Do you really think you can stop me?",
+      "I loved you. But now I see the truth.",
+      "I’m doing this for *you*, Mark.",
+      "You’re not ready, and I’m done waiting.",
+      "This world was never yours.",
+      "You don’t get to be a hero just because you try.",
+      "This is the only way, Mark.",
+      "You’re being emotional. That’s what makes you weak.",
+      "You're fighting me? You're delaying the inevitable.",
+      "I'm not here to be your father. I'm here to save our people."
+    ];
+
+    let unlockedQuotes = [];
+
     function checkCode() {
       const code = document.getElementById('code').value;
       if (code === "1234") {
+        const randomIndex = Math.floor(Math.random() * messages.length);
+        const msg = messages[randomIndex];
+
+        document.getElementById('secretMsg').textContent = msg;
         document.getElementById('secret').style.display = "block";
+
+        if (!unlockedQuotes.includes(msg)) {
+          unlockedQuotes.push(msg);
+        }
+
+        updateUnlockedList();
       } else {
         alert("ACCESS DENIED");
       }
+    }
+
+    function toggleUnlocked() {
+      const container = document.getElementById('unlockedContainer');
+      container.style.display = container.style.display === "none" ? "block" : "none";
+    }
+
+    function updateUnlockedList() {
+      const list = document.getElementById('unlockedList');
+      list.innerHTML = unlockedQuotes.map(q => `• ${q}`).join("<br>");
     }
   </script>
 </body>
