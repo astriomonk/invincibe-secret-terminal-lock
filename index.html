@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Omni-Man Lock</title>
+<title>Omni-Man Fly Toward Screen</title>
 <style>
   body {
     background: black;
@@ -25,7 +25,7 @@
     width: 90%;
     max-width: 600px;
     position: relative;
-    z-index: 2;
+    z-index: 10;
   }
   input {
     background: black;
@@ -58,62 +58,80 @@
     border-top: 1px dashed #0f0;
     padding-top: 10px;
   }
-  /* Omni-Man image styles and animation */
+
+  /* Omni-Man image styles and fly-toward-screen animation */
   #omni-man {
     position: fixed;
-    bottom: 20%;
+    bottom: 50%;
     left: 50%;
     width: 200px;
     opacity: 0;
-    transform: translateX(-50%) scale(0.1);
-    filter: drop-shadow(0 0 10px red);
-    z-index: 1;
+    transform-origin: center center;
+    transform: translate(-50%, 50%) scale(0.1);
+    filter: drop-shadow(0 0 20px red);
+    z-index: 5;
+    pointer-events: none; /* so it doesn't block buttons */
   }
-  @keyframes flyInFast {
+
+  @keyframes flyTowardScreen {
     0% {
       opacity: 0;
-      transform: translateX(-50%) scale(0.1);
+      transform: translate(-50%, 50%) scale(0.1) rotate(0deg);
+      filter: drop-shadow(0 0 5px red);
     }
-    70% {
+    30% {
       opacity: 1;
-      transform: translateX(-50%) scale(1.2);
+      transform: translate(-50%, 0) scale(0.6) rotate(5deg);
+      filter: drop-shadow(0 0 15px red);
+    }
+    60% {
+      opacity: 1;
+      transform: translate(-50%, -30%) scale(1.2) rotate(-5deg);
       filter: drop-shadow(0 0 30px red);
+    }
+    80% {
+      opacity: 1;
+      transform: translate(-50%, -60%) scale(2.5) rotate(10deg);
+      filter: drop-shadow(0 0 40px red);
     }
     100% {
       opacity: 1;
-      transform: translateX(-50%) scale(1);
-      filter: drop-shadow(0 0 15px red);
+      transform: translate(-50%, -90%) scale(4) rotate(-10deg);
+      filter: drop-shadow(0 0 60px red);
     }
   }
-  @keyframes glitchFast {
+
+  /* Quick glitch flicker for effect */
+  @keyframes quickGlitch {
     0%, 100% {
-      clip-path: inset(0 0 0 0);
-      transform: translate(0);
+      filter: drop-shadow(0 0 60px red);
       opacity: 1;
+      transform: translate(-50%, -90%) scale(4) rotate(-10deg);
     }
-    10%, 50% {
-      clip-path: inset(30% 0 60% 0);
-      transform: translate(-10px, -5px);
-      opacity: 0.7;
-    }
-    20%, 60% {
-      clip-path: inset(60% 0 30% 0);
-      transform: translate(10px, 5px);
+    20% {
+      filter: drop-shadow(5px 0 20px cyan);
       opacity: 0.8;
+      transform: translate(calc(-50% + 5px), calc(-90% + 3px)) scale(4) rotate(-8deg);
     }
-    30%, 70% {
-      clip-path: inset(20% 0 75% 0);
-      transform: translate(-5px, 3px);
-      opacity: 0.9;
-    }
-    40%, 80% {
-      clip-path: inset(70% 0 15% 0);
-      transform: translate(5px, -3px);
+    40% {
+      filter: drop-shadow(-5px 0 20px magenta);
       opacity: 0.85;
+      transform: translate(calc(-50% - 5px), calc(-90% - 3px)) scale(4) rotate(-12deg);
+    }
+    60% {
+      filter: drop-shadow(3px 0 30px yellow);
+      opacity: 0.9;
+      transform: translate(calc(-50% + 3px), calc(-90% + 2px)) scale(4) rotate(-9deg);
+    }
+    80% {
+      filter: drop-shadow(-3px 0 25px lime);
+      opacity: 0.85;
+      transform: translate(calc(-50% - 3px), calc(-90% - 2px)) scale(4) rotate(-11deg);
     }
   }
-  .glitchFast {
-    animation: glitchFast 0.4s infinite;
+
+  .flyAndGlitch {
+    animation: flyTowardScreen 1.2s forwards, quickGlitch 0.3s 1.2s 6 alternate;
   }
 </style>
 </head>
@@ -187,20 +205,20 @@
       }
       updateUnlockedList();
 
-      // Animate Omni-Man fly in
-      omniMan.style.animation = "none"; // reset animation
-      void omniMan.offsetWidth; // trigger reflow
-      omniMan.style.animation = "flyInFast 0.8s ease forwards";
+      // Reset animation if playing
+      omniMan.style.animation = "none";
+      void omniMan.offsetWidth; // Trigger reflow
 
-      // After fly in, start glitch effect
-      setTimeout(() => {
-        omniMan.classList.add("glitchFast");
-      }, 800);
+      // Start fly toward screen animation + glitch flicker
+      omniMan.style.opacity = "1";
+      omniMan.classList.add("flyAndGlitch");
 
-      // Stop glitch after 3 seconds
+      // Remove class after animation finishes (1.2s + glitch 0.3*6 = 3s total)
       setTimeout(() => {
-        omniMan.classList.remove("glitchFast");
-      }, 3800);
+        omniMan.classList.remove("flyAndGlitch");
+        omniMan.style.opacity = "0";
+        omniMan.style.transform = "translate(-50%, 50%) scale(0.1) rotate(0deg)";
+      }, 3200);
 
       secretDiv.style.color = "#0f0";
     } else {
