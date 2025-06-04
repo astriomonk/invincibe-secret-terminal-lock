@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Omni-Man Fly Toward Screen</title>
+<title>invincible secret code game</title>
 <style>
   body {
     background: black;
@@ -70,7 +70,7 @@
     transform: translate(-50%, 50%) scale(0.1);
     filter: drop-shadow(0 0 20px red);
     z-index: 5;
-    pointer-events: none; /* so it doesn't block buttons */
+    pointer-events: none;
   }
 
   @keyframes flyTowardScreen {
@@ -101,7 +101,6 @@
     }
   }
 
-  /* Quick glitch flicker for effect */
   @keyframes quickGlitch {
     0%, 100% {
       filter: drop-shadow(0 0 60px red);
